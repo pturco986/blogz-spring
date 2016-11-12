@@ -35,6 +35,7 @@ public class AuthenticationController extends AbstractController {
 			//need to add user to database
 			User user = new User(username, password);
 			userDao.save(user);
+			Session thisSession = request.getSession();
 			return "newpost";
 		} 
 		
@@ -64,10 +65,22 @@ public class AuthenticationController extends AbstractController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(HttpServletRequest request, Model model) {
-		
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		// TODO - implement login
-		
-		return "redirect:blog/newpost";
+		if (User.isValidUsername(username) && username.equals(username) && User.isMatchingPassword(password)){
+		//need to set the user in y the 
+		return "newpost";
+		}
+		if (!User.isValidUsername(username) || !username.equals(username) || username == null) {
+			//this occurs if the username doesn't exit
+			model.addAttribute("error", "Invalid username");
+		}
+		if (!User.isValidPassword(password) || password == null || !User.isMatchingPassword(password)) {
+			//this occurs if the password is incorrect
+			model.addAttribute("error", "Invalid password");
+		}
+		return "login";
 	}
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
