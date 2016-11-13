@@ -24,14 +24,14 @@ public class PostController extends AbstractController {
 	public String newPost(HttpServletRequest request, Model model) {
 		String title = request.getParameter("title");
 		String body = request.getParameter("body");
-		User author = Post.getAuthor();
+		User user = this.getUserFromSession(request.getSession());
 		// TODO - implement newPost 
 		// get request parameters (CHECK)
 		// validate parameters (CHECK)
 		// if valid, create new Post (CHECK)
 		// if not valid, send them back to form with error message CHECK)
 		if (title != null && body != null && title != "" && body != "") {
-		Post post = new Post(title, body, author);
+		Post post = new Post(title, body, user);
 		
 		postDao.save(post);
 		return "post/{username}/{uid}"; //need to figure out what goes here so it goes to the specific post
@@ -40,7 +40,7 @@ public class PostController extends AbstractController {
 			model.addAttribute("error", "You cannot leave a field blank");
 		}
 		return "newpost";
-		; // TODO - this redirect should go to the new post's page (this is done)		
+		 // TODO - this redirect should go to the new post's page (this is done)		
 	}
 	//handles request like /blog/chris/5
 	@RequestMapping(value = "/blog/{username}/{uid}", method = RequestMethod.GET)
@@ -50,20 +50,21 @@ public class PostController extends AbstractController {
 		// get the given post
 		// pass the post into the template
 		//then return the name of the template
-		
-		return "post/{uid}";
+		Post post = postDao.findByUid(uid);
+		model.addAttribute("post", post);
+		return "post";
 	}
 	
 	@RequestMapping(value = "/blog/{username}", method = RequestMethod.GET)
 	public String userPosts(@PathVariable String username, Model model) {
 		
 		// TODO - implement userPosts
-		
+		User author = userDao.findByUsername(username);
 		// get all of the user's posts
-		
+		List<Post> posts = author.getPosts();
 		//pass the posts into the template
 		//model.addAttribute("name", listOfPosts);
-		
+		model.addAttribute("posts", posts);
 		return "blog";
 	}
 	

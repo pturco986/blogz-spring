@@ -35,7 +35,7 @@ public class AuthenticationController extends AbstractController {
 			//need to add user to database
 			User user = new User(username, password);
 			userDao.save(user);
-			Session thisSession = request.getSession();
+			this.setUserInSession(request.getSession(), user);
 			return "newpost";
 		} 
 		
@@ -68,19 +68,20 @@ public class AuthenticationController extends AbstractController {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		// TODO - implement login
-		if (User.isValidUsername(username) && username.equals(username) && User.isMatchingPassword(password)){
+		User user = userDao.findByUsername(username);
+		if (user == null) {
+			model.addAttribute("error", "Username does not exist");
+			return "login";
+		}
 		//need to then set the user in the specific session instance
-		return "newpost";
+		if (user.isMatchingPassword(password)) {
+			this.setUserInSession(request.getSession(), user);
+			return "redirect:blog/newpost";
 		}
-		if (!User.isValidUsername(username) || !username.equals(username) || username == null) {
-			//this occurs if the username doesn't exit
-			model.addAttribute("error", "Invalid username");
-		}
-		if (!User.isValidPassword(password) || password == null || !User.isMatchingPassword(password)) {
-			//this occurs if the password is incorrect
-			model.addAttribute("error", "Invalid password");
-		}
+		
+		model.addAttribute("error", "Incorrect password");
 		return "login";
+		
 	}
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
