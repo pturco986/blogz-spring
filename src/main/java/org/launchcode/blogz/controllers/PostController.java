@@ -31,11 +31,13 @@ public class PostController extends AbstractController {
 		// if valid, create new Post (CHECK)
 		// if not valid, send them back to form with error message CHECK)
 		if (title != null && body != null && title != "" && body != "") {
-		Post post = new Post(title, body, user);
 		
+		Post post = new Post(title, body, user);
 		postDao.save(post);
-		return "post/{username}/{uid}"; //need to figure out what goes here so it goes to the specific post
+		return String.format("redirect:/blog/%s, %s", user.getUsername(), post.getUid()); 
+		
 		}
+		
 		if (title == null || title == "" || body == null || body == ""){
 			model.addAttribute("error", "You cannot leave a field blank");
 		}

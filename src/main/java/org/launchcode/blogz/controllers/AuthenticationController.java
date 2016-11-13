@@ -30,6 +30,13 @@ public class AuthenticationController extends AbstractController {
 		String verify = request.getParameter("verify");
 		
 		
+		User prev_user = userDao.findByUsername(username);
+		if (prev_user != null) {
+			model.addAttribute("username_error", "Username is already taken");
+			return "signup";
+		}
+		
+		
 		if (User.isValidUsername(username) && User.isValidPassword(password) && password.equals(verify)){
 			//This is if everything passes
 			//need to add user to database
@@ -41,12 +48,12 @@ public class AuthenticationController extends AbstractController {
 		
 		if (!User.isValidPassword(password) || password == null) {
 			//This occurs if the password isn't valid
-			model.addAttribute("password_error", "Your username is invalid");
+			model.addAttribute("password_error", "Your password is invalid");
 		}
 			
 		if (!User.isValidUsername(username) || username == null) {
 			//this occurs if the username isn't valid
-			model.addAttribute("username_error", "Your password is invalid");
+			model.addAttribute("username_error", "Your username is invalid");
 			
 		} 
 		
