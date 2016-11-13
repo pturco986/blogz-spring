@@ -69,7 +69,7 @@ public class AuthenticationController extends AbstractController {
 		String password = request.getParameter("password");
 		// TODO - implement login
 		if (User.isValidUsername(username) && username.equals(username) && User.isMatchingPassword(password)){
-		//need to set the user in y the 
+		//need to then set the user in the specific session instance
 		return "newpost";
 		}
 		if (!User.isValidUsername(username) || !username.equals(username) || username == null) {
