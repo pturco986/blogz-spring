@@ -1,7 +1,5 @@
 package org.launchcode.blogz.controllers;
 
-import java.util.List;
-
 import org.launchcode.blogz.models.Post;
 import org.launchcode.blogz.models.User;
 import org.springframework.stereotype.Controller;
@@ -15,7 +13,7 @@ public class BlogController extends AbstractController {
 	public String index(Model model){
 		
 		// TODO - fetch users and pass to template
-		
+		model.addAttribute("username", User.findAll()); //I'm not sure what I need to do here.
 		return "index";
 	}
 	
@@ -23,7 +21,7 @@ public class BlogController extends AbstractController {
 	public String blogIndex(Model model) {
 		
 		// TODO - fetch posts and pass to template
-		
+		model.addAttribute("post", Post.findAll());
 		return "blog";
 	}
 	
