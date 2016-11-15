@@ -34,7 +34,7 @@ public class PostController extends AbstractController {
 		
 		Post post = new Post(title, body, user);
 		postDao.save(post);
-		return String.format("redirect:/blog/%s, %s", user.getUsername(), post.getUid()); 
+		return String.format("redirect:/blog/%s/%s", user.getUsername(), post.getUid()); //should redirect to the users new post
 		
 		}
 		
